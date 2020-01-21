@@ -1,19 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import M from "materialize-css/dist/js/materialize.min.js";
+import { connect } from "react-redux";
+import { updateLog, clearCurent } from "../../actions/logActions";
 
-const EditLogModal = () => {
+const EditLogModal = ({ log: { current }, updateLog, clearCurent }) => {
   const [message, setMessage] = useState("");
   const [tech, setTech] = useState("");
   const [attention, setAttention] = useState(false);
 
+  useEffect(() => {
+    if (current) {
+      setMessage(current.message);
+      setTech(current.tech);
+      setAttention(current.attention);
+    }
+  }, [current]);
   const submit = () => {
     if (message === "" || tech === "")
       M.toast({ html: "Please enter message and select technician" });
     else {
-      console.log(message, tech, attention);
-      setMessage("");
-      setTech("");
-      setAttention(false);
+      updateLog({
+        message, attention, date: new Date(), tech, id: current.id
+      });
+      clearCurent();
     }
   };
 
@@ -25,7 +34,7 @@ const EditLogModal = () => {
     >
       <div className='modal-content'>
         <h4>Edit System Log</h4>
-        
+
         <div className='row'>
           <div className='input-field'>
             <input
@@ -34,10 +43,9 @@ const EditLogModal = () => {
               value={message}
               onChange={event => setMessage(event.target.value)}
             />
-            <label htmlFor='message'>Enter Log Message</label>
           </div>
         </div>
-        
+
         <div className='row'>
           <div className='input-field'>
             <select
@@ -55,7 +63,7 @@ const EditLogModal = () => {
             </select>
           </div>
         </div>
-        
+
         <div className='row'>
           <div className='input-field'>
             <label>
@@ -63,14 +71,15 @@ const EditLogModal = () => {
                 type='checkbox'
                 className='filled-in'
                 name='attention'
-                value={!attention}
-                onChange={event => setAttention(event.target.value)}
+                value={attention}
+                checked={attention}
+                onChange={event => setAttention(!attention)}
               />
               <span>Needs Attention</span>
             </label>
           </div>
         </div>
-        
+
         <div className='modal-footer'>
           <a
             href='#!'
@@ -85,4 +94,8 @@ const EditLogModal = () => {
   );
 };
 
-export default EditLogModal;
+const mapStateToProps = state => ({
+  log: state.log
+});
+
+export default connect(mapStateToProps, { updateLog, clearCurent })(EditLogModal);

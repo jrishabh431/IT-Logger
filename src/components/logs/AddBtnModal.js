@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import M from "materialize-css/dist/js/materialize.min.js";
+import {addLog} from "../../actions/logActions";
+import {connect} from "react-redux";
 
-const AddBtnModal = () => {
+const AddBtnModal = ({addLog}) => {
   const [message, setMessage] = useState("");
   const [tech, setTech] = useState("");
   const [attention, setAttention] = useState(false);
@@ -10,7 +12,8 @@ const AddBtnModal = () => {
     if (message === "" || tech === "")
       M.toast({ html: "Please enter message and select technician" });
     else {
-      console.log(message, tech, attention);
+      addLog({message, attention, date: new Date(), tech});
+      M.toast({html: `Log added by ${tech}`})
       setMessage("");
       setTech("");
       setAttention(false);
@@ -63,8 +66,9 @@ const AddBtnModal = () => {
                 type='checkbox'
                 className='filled-in'
                 name='attention'
-                value={!attention}
-                onChange={event => setAttention(event.target.value)}
+                value={attention}
+                checked={attention}
+                onChange={event => setAttention(!attention)}
               />
               <span>Needs Attention</span>
             </label>
@@ -85,4 +89,4 @@ const AddBtnModal = () => {
   );
 };
 
-export default AddBtnModal;
+export default connect(null, {addLog})(AddBtnModal);

@@ -1,4 +1,18 @@
 {
-  "logs": [],
-  "techs": []
+  "logs": [
+    {
+      "message": "nmbmn",
+      "attention": true,
+      "date": "2020-05-05T11:32:45.572Z",
+      "tech": "mn,m mnbmn",
+      "id": 1
+    }
+  ],
+  "techs": [
+    {
+      "firstName": "mn,m",
+      "lastName": "mnbmn",
+      "id": 1
+    }
+  ]
 }
